@@ -1,0 +1,116 @@
+@extends('layouts.admin')
+
+@section('page-title', 'Pengaturan Aplikasi')
+
+@section('content')
+<div class="space-y-6 w-full">
+
+    <!-- Header Section -->
+    <div class="pb-4 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+            <h1 class="text-2xl font-bold text-white tracking-tight">Pengaturan Aplikasi</h1>
+            <p class="text-sm text-slate-300 mt-1">Kelola informasi identitas aplikasi. Konfigurasi iklan ada di menu Iklan.</p>
+        </div>
+    </div>
+
+    <!-- Alert Notifications -->
+    @if (session('success'))
+        <div class="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-sm font-medium text-emerald-400 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+                <span>{{ session('success') }}</span>
+            </div>
+            <button type="button" onclick="this.parentElement.remove()" class="text-emerald-400 hover:text-emerald-300" aria-label="Tutup notifikasi">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm font-medium text-rose-400 space-y-1">
+            @foreach ($errors->all() as $error)
+                <p>• {{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
+
+    <!-- Form Section -->
+    <form method="POST" action="{{ route('admin.settings.update') }}" class="space-y-6 w-full">
+        @csrf
+        @method('PUT')
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full items-start">
+
+            <!-- Card 1: Identitas & Informasi Aplikasi -->
+            <div class="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-sm space-y-5">
+                <div class="border-b border-slate-800 pb-4">
+                    <h2 class="text-base font-semibold text-white">Identitas &amp; Informasi Aplikasi</h2>
+                    <p class="text-xs text-slate-400 mt-1">Konfigurasi nama perusahaan pemilik dan nama tampilan aplikasi karaoke</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label for="applicationcompany" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                            Nama Perusahaan <span class="text-rose-400">*</span>
+                        </label>
+                        <input type="text"
+                               name="applicationcompany"
+                               id="applicationcompany"
+                               value="{{ old('applicationcompany', $setting->applicationcompany) }}"
+                               required
+                               maxlength="100"
+                               placeholder="Contoh: PT Karaoke Nusantara"
+                               class="block w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-400 focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 transition-colors">
+                        @error('applicationcompany')
+                            <p class="mt-1 text-xs text-rose-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="applicationname" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                            Nama Aplikasi <span class="text-rose-400">*</span>
+                        </label>
+                        <input type="text"
+                               name="applicationname"
+                               id="applicationname"
+                               value="{{ old('applicationname', $setting->applicationname) }}"
+                               required
+                               maxlength="255"
+                               placeholder="Contoh: Karaoke Pro App"
+                               class="block w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder-slate-400 focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 transition-colors">
+                        @error('applicationname')
+                            <p class="mt-1 text-xs text-rose-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="rounded-xl border border-slate-800/80 bg-slate-950/60 p-4 text-xs text-slate-400 space-y-1.5">
+                    <p class="font-medium text-slate-300 flex items-center gap-1.5">
+                        <svg class="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                        </svg>
+                        Informasi Penggunaan
+                    </p>
+                    <p>Nama aplikasi dan perusahaan akan digunakan di seluruh antarmuka sistem dan respon API aplikasi karaoke.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Bar -->
+        <div class="flex items-center justify-end gap-3 pt-2">
+            <button type="submit"
+                    class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-blue-500 active:bg-blue-700 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 cursor-pointer">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+                <span>Simpan Pengaturan</span>
+            </button>
+        </div>
+    </form>
+
+</div>
+@endsection
