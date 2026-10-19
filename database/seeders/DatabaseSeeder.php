@@ -51,9 +51,12 @@ class DatabaseSeeder extends Seeder
             [
                 'applicationname' => 'Melindastore Youtube Stream Karaoke',
                 'applicationads1active' => 'N',
+                'applicationads1clickurl' => null,
                 'applicationads2active' => 'N',
+                'applicationads2clickurl' => null,
                 'applicationadsactive' => 'N',
                 'applicationadsbottomactive' => 'N',
+                'applicationadsbottomclickurl' => null,
             ]
         );
 

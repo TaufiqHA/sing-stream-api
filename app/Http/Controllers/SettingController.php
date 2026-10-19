@@ -35,15 +35,18 @@ class SettingController extends Controller
             'applicationads1type' => ['nullable', 'string', 'in:image,admob_native,admob_banner,admob_interstitial,admob_app_open,admob_reward'],
             'applicationads1unit' => ['nullable', 'string', 'max:255'],
             'applicationads1active' => ['sometimes', 'string', 'in:Y,N'],
+            'applicationads1clickurl' => ['nullable', 'url:http,https', 'max:2048'],
             'applicationads2' => ['nullable', 'string'],
             'applicationads2type' => ['nullable', 'string', 'in:image,admob_native,admob_banner,admob_interstitial,admob_app_open,admob_reward'],
             'applicationads2unit' => ['nullable', 'string', 'max:255'],
             'applicationads2active' => ['sometimes', 'string', 'in:Y,N'],
+            'applicationads2clickurl' => ['nullable', 'url:http,https', 'max:2048'],
             'applicationadsactive' => ['sometimes', 'string', 'in:Y,N'],
             'applicationadsbottom' => ['nullable', 'string'],
             'applicationadsbottomtype' => ['nullable', 'string', 'in:image,admob_native,admob_banner,admob_interstitial,admob_app_open,admob_reward'],
             'applicationadsbottomunit' => ['nullable', 'string', 'max:255'],
             'applicationadsbottomactive' => ['sometimes', 'string', 'in:Y,N'],
+            'applicationadsbottomclickurl' => ['nullable', 'url:http,https', 'max:2048'],
         ]);
 
         $validated = $this->syncActiveStatuses($validated, $setting);
@@ -112,15 +115,18 @@ class SettingController extends Controller
             'applicationads1type' => ['nullable', 'string', 'in:image,admob_native,admob_banner,admob_interstitial,admob_app_open,admob_reward'],
             'applicationads1unit' => ['nullable', 'string', 'max:255'],
             'applicationads1active' => ['sometimes', 'string', 'in:Y,N'],
+            'applicationads1clickurl' => ['nullable', 'url:http,https', 'max:2048'],
             'applicationads2' => ['nullable', 'string'],
             'applicationads2type' => ['nullable', 'string', 'in:image,admob_native,admob_banner,admob_interstitial,admob_app_open,admob_reward'],
             'applicationads2unit' => ['nullable', 'string', 'max:255'],
             'applicationads2active' => ['sometimes', 'string', 'in:Y,N'],
+            'applicationads2clickurl' => ['nullable', 'url:http,https', 'max:2048'],
             'applicationadsactive' => ['sometimes', 'required', 'string', 'in:Y,N'],
             'applicationadsbottom' => ['nullable', 'string'],
             'applicationadsbottomtype' => ['nullable', 'string', 'in:image,admob_native,admob_banner,admob_interstitial,admob_app_open,admob_reward'],
             'applicationadsbottomunit' => ['nullable', 'string', 'max:255'],
             'applicationadsbottomactive' => ['sometimes', 'required', 'string', 'in:Y,N'],
+            'applicationadsbottomclickurl' => ['nullable', 'url:http,https', 'max:2048'],
         ]);
 
         $validated = $this->syncActiveStatuses($validated, $setting);

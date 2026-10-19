@@ -28,15 +28,18 @@ class AdSettingController extends Controller
             'applicationads1type' => 'image',
             'applicationads1unit' => '',
             'applicationads1active' => 'Y',
+            'applicationads1clickurl' => '',
             'applicationads2' => '',
             'applicationads2type' => 'image',
             'applicationads2unit' => '',
             'applicationads2active' => 'Y',
+            'applicationads2clickurl' => '',
             'applicationadsactive' => 'Y',
             'applicationadsbottom' => '',
             'applicationadsbottomtype' => 'image',
             'applicationadsbottomunit' => '',
             'applicationadsbottomactive' => 'Y',
+            'applicationadsbottomclickurl' => '',
         ]);
 
         return view('admin.ads.edit', [
@@ -59,14 +62,17 @@ class AdSettingController extends Controller
             'applicationads1type' => ['nullable', 'string', 'in:image,'.$admobTypes],
             'applicationads1unit' => ['nullable', 'string', 'max:255', 'required_if:applicationads1type,'.$admobTypes],
             'applicationads1active' => ['required', 'in:Y,N'],
+            'applicationads1clickurl' => ['nullable', 'url:http,https', 'max:2048'],
             'applicationads2' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,webp,gif,svg', 'max:2048'],
             'applicationads2type' => ['nullable', 'string', 'in:image,'.$admobTypes],
             'applicationads2unit' => ['nullable', 'string', 'max:255', 'required_if:applicationads2type,'.$admobTypes],
             'applicationads2active' => ['required', 'in:Y,N'],
+            'applicationads2clickurl' => ['nullable', 'url:http,https', 'max:2048'],
             'applicationadsbottom' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,webp,gif,svg', 'max:2048'],
             'applicationadsbottomtype' => ['nullable', 'string', 'in:image,'.$admobTypes],
             'applicationadsbottomunit' => ['nullable', 'string', 'max:255', 'required_if:applicationadsbottomtype,'.$admobTypes],
             'applicationadsbottomactive' => ['required', 'in:Y,N'],
+            'applicationadsbottomclickurl' => ['nullable', 'url:http,https', 'max:2048'],
             'delete_applicationads1' => ['nullable', 'boolean'],
             'delete_applicationads2' => ['nullable', 'boolean'],
             'delete_applicationadsbottom' => ['nullable', 'boolean'],
@@ -77,18 +83,24 @@ class AdSettingController extends Controller
             'applicationads1unit.required_if' => 'Ad Unit ID AdMob slot 1 wajib diisi.',
             'applicationads1active.required' => 'Status iklan slot 1 wajib dipilih.',
             'applicationads1active.in' => 'Status iklan slot 1 harus bernilai Y atau N.',
+            'applicationads1clickurl.url' => 'URL tujuan banner slot 1 harus berupa URL yang valid.',
+            'applicationads1clickurl.max' => 'URL tujuan banner slot 1 maksimal 2048 karakter.',
             'applicationads2.image' => 'Banner iklan slot 2 harus berupa file gambar.',
             'applicationads2.max' => 'Ukuran file banner iklan slot 2 maksimal 2MB.',
             'applicationads2type.in' => 'Jenis iklan slot 2 tidak dikenali.',
             'applicationads2unit.required_if' => 'Ad Unit ID AdMob slot 2 wajib diisi.',
             'applicationads2active.required' => 'Status iklan slot 2 wajib dipilih.',
             'applicationads2active.in' => 'Status iklan slot 2 harus bernilai Y atau N.',
+            'applicationads2clickurl.url' => 'URL tujuan banner slot 2 harus berupa URL yang valid.',
+            'applicationads2clickurl.max' => 'URL tujuan banner slot 2 maksimal 2048 karakter.',
             'applicationadsbottom.image' => 'Banner iklan bawah harus berupa file gambar.',
             'applicationadsbottom.max' => 'Ukuran file banner iklan bawah maksimal 2MB.',
             'applicationadsbottomtype.in' => 'Jenis iklan bawah tidak dikenali.',
             'applicationadsbottomunit.required_if' => 'Ad Unit ID AdMob bawah wajib diisi.',
             'applicationadsbottomactive.required' => 'Status iklan bawah wajib dipilih.',
             'applicationadsbottomactive.in' => 'Status iklan bawah harus bernilai Y atau N.',
+            'applicationadsbottomclickurl.url' => 'URL tujuan banner bawah harus berupa URL yang valid.',
+            'applicationadsbottomclickurl.max' => 'URL tujuan banner bawah maksimal 2048 karakter.',
         ]);
 
         $setting = Setting::first();
@@ -112,6 +124,7 @@ class AdSettingController extends Controller
                     Storage::disk('public')->delete($setting->$field);
                 }
                 $validated[$field] = null;
+                $validated[$field.'clickurl'] = null;
             } else {
                 $validated[$field] = $setting?->$field;
             }

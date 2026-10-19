@@ -83,11 +83,14 @@ test('admin can create initial settings via post', function () {
         'applicationname' => 'Karaoke Pro Station',
         'applicationads1' => 'https://example.com/banner1.jpg',
         'applicationads1active' => 'Y',
+        'applicationads1clickurl' => 'https://example.com/click-1',
         'applicationads2' => 'https://example.com/banner2.jpg',
         'applicationads2active' => 'N',
+        'applicationads2clickurl' => 'https://example.com/click-2',
         'applicationadsactive' => 'Y',
         'applicationadsbottom' => 'https://example.com/bottom.jpg',
         'applicationadsbottomactive' => 'Y',
+        'applicationadsbottomclickurl' => 'https://example.com/click-bottom',
     ]);
 
     $response->assertStatus(201)
@@ -99,11 +102,14 @@ test('admin can create initial settings via post', function () {
                 'applicationname',
                 'applicationads1',
                 'applicationads1active',
+                'applicationads1clickurl',
                 'applicationads2',
                 'applicationads2active',
+                'applicationads2clickurl',
                 'applicationadsactive',
                 'applicationadsbottom',
                 'applicationadsbottomactive',
+                'applicationadsbottomclickurl',
                 'created_at',
                 'updated_at',
             ],
@@ -114,9 +120,12 @@ test('admin can create initial settings via post', function () {
                 'applicationcompany' => 'Media Prima Nusantara',
                 'applicationname' => 'Karaoke Pro Station',
                 'applicationads1active' => 'Y',
+                'applicationads1clickurl' => 'https://example.com/click-1',
                 'applicationads2active' => 'N',
+                'applicationads2clickurl' => 'https://example.com/click-2',
                 'applicationadsactive' => 'Y',
                 'applicationadsbottomactive' => 'Y',
+                'applicationadsbottomclickurl' => 'https://example.com/click-bottom',
             ],
         ]);
 
@@ -124,8 +133,11 @@ test('admin can create initial settings via post', function () {
         'applicationcompany' => 'Media Prima Nusantara',
         'applicationname' => 'Karaoke Pro Station',
         'applicationads1active' => 'Y',
+        'applicationads1clickurl' => 'https://example.com/click-1',
         'applicationads2active' => 'N',
+        'applicationads2clickurl' => 'https://example.com/click-2',
         'applicationadsactive' => 'Y',
+        'applicationadsbottomclickurl' => 'https://example.com/click-bottom',
     ]);
 });
 
@@ -322,6 +334,20 @@ test('admin can create settings with admob ad configuration via api', function (
         'applicationadsbottomtype' => 'admob_app_open',
         'applicationadsbottomunit' => 'ca-app-pub-1234567890123456/2222222222',
     ]);
+});
+
+test('admin settings api rejects invalid banner click url', function () {
+    $admin = User::factory()->admin()->create();
+    Sanctum::actingAs($admin);
+
+    Setting::factory()->create();
+
+    $response = $this->putJson('/api/admin/settings', [
+        'applicationads1clickurl' => 'bukan-url',
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['applicationads1clickurl']);
 });
 
 test('admin settings api rejects invalid ad type', function () {

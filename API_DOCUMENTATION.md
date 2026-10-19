@@ -960,11 +960,14 @@ Accept: application/json
     "applicationname": "Karaoke Family Station",
     "applicationads1": "https://storage.example.com/ads/banner1.jpg",
     "applicationads1active": "Y",
+    "applicationads1clickurl": "https://example.com/promo-slot-1",
     "applicationads2": "https://storage.example.com/ads/banner2.jpg",
     "applicationads2active": "Y",
+    "applicationads2clickurl": "https://example.com/promo-slot-2",
     "applicationadsactive": "Y",
     "applicationadsbottom": "https://storage.example.com/ads/banner_bottom.jpg",
     "applicationadsbottomactive": "Y",
+    "applicationadsbottomclickurl": "https://example.com/promo-footer",
     "created_at": "2026-08-31T17:00:00.000000Z",
     "updated_at": "2026-08-31T17:00:00.000000Z"
   }
@@ -1001,11 +1004,14 @@ Accept: application/json
 | `applicationname` | string | Wajib (baru) / Opsional (update) | Nama aplikasi karaoke (maks. 255 karakter) |
 | `applicationads1` | string | Opsional | URL gambar iklan atau banner 1 |
 | `applicationads1active` | string | Opsional | Status aktif slot 1 (`"Y"` atau `"N"`, default: `"Y"`) |
+| `applicationads1clickurl` | string | Opsional | URL tujuan saat banner gambar slot 1 diklik (http/https, maks. 2048 karakter) |
 | `applicationads2` | string | Opsional | URL gambar iklan atau banner 2 |
 | `applicationads2active` | string | Opsional | Status aktif slot 2 (`"Y"` atau `"N"`, default: `"Y"`) |
+| `applicationads2clickurl` | string | Opsional | URL tujuan saat banner gambar slot 2 diklik (http/https, maks. 2048 karakter) |
 | `applicationadsactive` | string | Opsional | Status agregat lama banner atas; otomatis `"Y"` bila salah satu slot utama aktif. Jika dikirim sendiri, nilainya diterapkan ke kedua slot |
 | `applicationadsbottom` | string | Opsional | URL gambar iklan bottom banner |
 | `applicationadsbottomactive` | string | Opsional | Status aktif bottom banner (`"Y"` atau `"N"`, default: `"Y"`) |
+| `applicationadsbottomclickurl` | string | Opsional | URL tujuan saat banner gambar footer diklik (http/https, maks. 2048 karakter) |
 
 ```json
 {
@@ -1013,11 +1019,14 @@ Accept: application/json
   "applicationname": "Karaoke Family Station",
   "applicationads1": "https://storage.example.com/ads/banner1.jpg",
   "applicationads1active": "Y",
+  "applicationads1clickurl": "https://example.com/promo-slot-1",
   "applicationads2": "https://storage.example.com/ads/banner2.jpg",
   "applicationads2active": "Y",
+  "applicationads2clickurl": "https://example.com/promo-slot-2",
   "applicationadsactive": "Y",
   "applicationadsbottom": "https://storage.example.com/ads/banner_bottom.jpg",
-  "applicationadsbottomactive": "Y"
+  "applicationadsbottomactive": "Y",
+  "applicationadsbottomclickurl": "https://example.com/promo-footer"
 }
 ```
 
@@ -1031,11 +1040,14 @@ Accept: application/json
     "applicationname": "Karaoke Family Station",
     "applicationads1": "https://storage.example.com/ads/banner1.jpg",
     "applicationads1active": "Y",
+    "applicationads1clickurl": "https://example.com/promo-slot-1",
     "applicationads2": "https://storage.example.com/ads/banner2.jpg",
     "applicationads2active": "Y",
+    "applicationads2clickurl": "https://example.com/promo-slot-2",
     "applicationadsactive": "Y",
     "applicationadsbottom": "https://storage.example.com/ads/banner_bottom.jpg",
     "applicationadsbottomactive": "Y",
+    "applicationadsbottomclickurl": "https://example.com/promo-footer",
     "created_at": "2026-08-31T17:00:00.000000Z",
     "updated_at": "2026-08-31T17:15:00.000000Z"
   }
@@ -1060,11 +1072,14 @@ Mengambil data record pengaturan aplikasi spesifik berdasarkan `applicationid`.
     "applicationname": "Karaoke Family Station",
     "applicationads1": "https://storage.example.com/ads/banner1.jpg",
     "applicationads1active": "Y",
+    "applicationads1clickurl": "https://example.com/promo-slot-1",
     "applicationads2": "https://storage.example.com/ads/banner2.jpg",
     "applicationads2active": "Y",
+    "applicationads2clickurl": "https://example.com/promo-slot-2",
     "applicationadsactive": "Y",
     "applicationadsbottom": "https://storage.example.com/ads/banner_bottom.jpg",
     "applicationadsbottomactive": "Y",
+    "applicationadsbottomclickurl": "https://example.com/promo-footer",
     "created_at": "2026-08-31T17:00:00.000000Z",
     "updated_at": "2026-08-31T17:15:00.000000Z"
   }
@@ -1098,11 +1113,14 @@ Mengupdate record pengaturan aplikasi tertentu.
     "applicationname": "Karaoke Super App",
     "applicationads1": "https://storage.example.com/ads/banner1.jpg",
     "applicationads1active": "Y",
+    "applicationads1clickurl": "https://example.com/promo-slot-1",
     "applicationads2": "https://storage.example.com/ads/banner2.jpg",
     "applicationads2active": "Y",
+    "applicationads2clickurl": "https://example.com/promo-slot-2",
     "applicationadsactive": "N",
     "applicationadsbottom": "https://storage.example.com/ads/banner_bottom.jpg",
     "applicationadsbottomactive": "Y",
+    "applicationadsbottomclickurl": "https://example.com/promo-footer",
     "created_at": "2026-08-31T17:00:00.000000Z",
     "updated_at": "2026-08-31T17:20:00.000000Z"
   }

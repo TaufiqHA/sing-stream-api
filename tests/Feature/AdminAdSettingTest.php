@@ -41,6 +41,9 @@ test('admin can view ads page even if no settings record exists yet', function (
     $response->assertSee('name="applicationads1active"', false);
     $response->assertSee('name="applicationads2active"', false);
     $response->assertSee('name="applicationadsbottomactive"', false);
+    $response->assertSee('name="applicationads1clickurl"', false);
+    $response->assertSee('name="applicationads2clickurl"', false);
+    $response->assertSee('name="applicationadsbottomclickurl"', false);
     $response->assertDontSee('name="applicationadsactive"', false);
 });
 
@@ -147,6 +150,67 @@ test('admin save rejects invalid per-slot active status', function () {
     ]);
 
     $response->assertSessionHasErrors(['applicationads1active']);
+});
+
+test('admin can save click url for each image banner', function () {
+    Storage::fake('public');
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->put('/admin/ads', [
+        'applicationads1active' => 'Y',
+        'applicationads1clickurl' => 'https://example.com/slot-1',
+        'applicationads2active' => 'Y',
+        'applicationads2clickurl' => 'https://example.com/slot-2',
+        'applicationadsbottomactive' => 'Y',
+        'applicationadsbottomclickurl' => 'https://example.com/footer',
+    ]);
+
+    $response->assertRedirect('/admin/ads');
+    $response->assertSessionHasNoErrors();
+
+    $setting = Setting::first();
+    expect($setting->applicationads1clickurl)->toBe('https://example.com/slot-1')
+        ->and($setting->applicationads2clickurl)->toBe('https://example.com/slot-2')
+        ->and($setting->applicationadsbottomclickurl)->toBe('https://example.com/footer');
+});
+
+test('admin save rejects invalid banner click url', function () {
+    Storage::fake('public');
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->put('/admin/ads', [
+        'applicationads1active' => 'Y',
+        'applicationads1clickurl' => 'bukan-url',
+        'applicationads2active' => 'Y',
+        'applicationadsbottomactive' => 'Y',
+    ]);
+
+    $response->assertSessionHasErrors(['applicationads1clickurl']);
+});
+
+test('deleting banner also clears its click url', function () {
+    Storage::fake('public');
+    $admin = User::factory()->admin()->create();
+
+    $bannerPath = UploadedFile::fake()->image('banner-with-link.jpg')->store('banners', 'public');
+
+    Setting::factory()->create([
+        'applicationads1' => $bannerPath,
+        'applicationads1clickurl' => 'https://example.com/promo',
+    ]);
+
+    $response = $this->actingAs($admin)->put('/admin/ads', [
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'Y',
+        'applicationadsbottomactive' => 'Y',
+        'delete_applicationads1' => '1',
+    ]);
+
+    $response->assertRedirect('/admin/ads');
+
+    $setting = Setting::first();
+    expect($setting->applicationads1)->toBeNull()
+        ->and($setting->applicationads1clickurl)->toBeNull();
 });
 
 test('admin can upload new banner file and delete old file', function () {
