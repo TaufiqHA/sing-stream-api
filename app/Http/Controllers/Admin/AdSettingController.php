@@ -27,9 +27,11 @@ class AdSettingController extends Controller
             'applicationads1' => '',
             'applicationads1type' => 'image',
             'applicationads1unit' => '',
+            'applicationads1active' => 'Y',
             'applicationads2' => '',
             'applicationads2type' => 'image',
             'applicationads2unit' => '',
+            'applicationads2active' => 'Y',
             'applicationadsactive' => 'Y',
             'applicationadsbottom' => '',
             'applicationadsbottomtype' => 'image',
@@ -56,10 +58,11 @@ class AdSettingController extends Controller
             'applicationads1' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,webp,gif,svg', 'max:2048'],
             'applicationads1type' => ['nullable', 'string', 'in:image,'.$admobTypes],
             'applicationads1unit' => ['nullable', 'string', 'max:255', 'required_if:applicationads1type,'.$admobTypes],
+            'applicationads1active' => ['required', 'in:Y,N'],
             'applicationads2' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,webp,gif,svg', 'max:2048'],
             'applicationads2type' => ['nullable', 'string', 'in:image,'.$admobTypes],
             'applicationads2unit' => ['nullable', 'string', 'max:255', 'required_if:applicationads2type,'.$admobTypes],
-            'applicationadsactive' => ['required', 'in:Y,N'],
+            'applicationads2active' => ['required', 'in:Y,N'],
             'applicationadsbottom' => ['nullable', 'file', 'image', 'mimes:jpeg,png,jpg,webp,gif,svg', 'max:2048'],
             'applicationadsbottomtype' => ['nullable', 'string', 'in:image,'.$admobTypes],
             'applicationadsbottomunit' => ['nullable', 'string', 'max:255', 'required_if:applicationadsbottomtype,'.$admobTypes],
@@ -72,16 +75,18 @@ class AdSettingController extends Controller
             'applicationads1.max' => 'Ukuran file banner iklan slot 1 maksimal 2MB.',
             'applicationads1type.in' => 'Jenis iklan slot 1 tidak dikenali.',
             'applicationads1unit.required_if' => 'Ad Unit ID AdMob slot 1 wajib diisi.',
+            'applicationads1active.required' => 'Status iklan slot 1 wajib dipilih.',
+            'applicationads1active.in' => 'Status iklan slot 1 harus bernilai Y atau N.',
             'applicationads2.image' => 'Banner iklan slot 2 harus berupa file gambar.',
             'applicationads2.max' => 'Ukuran file banner iklan slot 2 maksimal 2MB.',
             'applicationads2type.in' => 'Jenis iklan slot 2 tidak dikenali.',
             'applicationads2unit.required_if' => 'Ad Unit ID AdMob slot 2 wajib diisi.',
+            'applicationads2active.required' => 'Status iklan slot 2 wajib dipilih.',
+            'applicationads2active.in' => 'Status iklan slot 2 harus bernilai Y atau N.',
             'applicationadsbottom.image' => 'Banner iklan bawah harus berupa file gambar.',
             'applicationadsbottom.max' => 'Ukuran file banner iklan bawah maksimal 2MB.',
             'applicationadsbottomtype.in' => 'Jenis iklan bawah tidak dikenali.',
             'applicationadsbottomunit.required_if' => 'Ad Unit ID AdMob bawah wajib diisi.',
-            'applicationadsactive.required' => 'Status iklan utama wajib dipilih.',
-            'applicationadsactive.in' => 'Status iklan utama harus bernilai Y atau N.',
             'applicationadsbottomactive.required' => 'Status iklan bawah wajib dipilih.',
             'applicationadsbottomactive.in' => 'Status iklan bawah harus bernilai Y atau N.',
         ]);
@@ -113,6 +118,12 @@ class AdSettingController extends Controller
 
             unset($validated["delete_{$field}"]);
         }
+
+        // Kolom lama dipakai aplikasi versi sebelumnya: tampilkan iklan utama
+        // selama salah satu slot utamanya masih aktif.
+        $validated['applicationadsactive'] = ($validated['applicationads1active'] === 'Y' || $validated['applicationads2active'] === 'Y')
+            ? 'Y'
+            : 'N';
 
         if ($setting) {
             $setting->update($validated);

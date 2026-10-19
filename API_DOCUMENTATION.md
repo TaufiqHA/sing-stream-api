@@ -959,7 +959,9 @@ Accept: application/json
     "applicationcompany": "PT Karaoke Digital Nusantara",
     "applicationname": "Karaoke Family Station",
     "applicationads1": "https://storage.example.com/ads/banner1.jpg",
+    "applicationads1active": "Y",
     "applicationads2": "https://storage.example.com/ads/banner2.jpg",
+    "applicationads2active": "Y",
     "applicationadsactive": "Y",
     "applicationadsbottom": "https://storage.example.com/ads/banner_bottom.jpg",
     "applicationadsbottomactive": "Y",
@@ -998,8 +1000,10 @@ Accept: application/json
 | `applicationcompany` | string | Wajib (baru) / Opsional (update) | Nama perusahaan pengelola (maks. 100 karakter) |
 | `applicationname` | string | Wajib (baru) / Opsional (update) | Nama aplikasi karaoke (maks. 255 karakter) |
 | `applicationads1` | string | Opsional | URL gambar iklan atau banner 1 |
+| `applicationads1active` | string | Opsional | Status aktif slot 1 (`"Y"` atau `"N"`, default: `"Y"`) |
 | `applicationads2` | string | Opsional | URL gambar iklan atau banner 2 |
-| `applicationadsactive` | string | Opsional | Status aktif banner atas (`"Y"` atau `"N"`, default: `"Y"`) |
+| `applicationads2active` | string | Opsional | Status aktif slot 2 (`"Y"` atau `"N"`, default: `"Y"`) |
+| `applicationadsactive` | string | Opsional | Status agregat lama banner atas; otomatis `"Y"` bila salah satu slot utama aktif. Jika dikirim sendiri, nilainya diterapkan ke kedua slot |
 | `applicationadsbottom` | string | Opsional | URL gambar iklan bottom banner |
 | `applicationadsbottomactive` | string | Opsional | Status aktif bottom banner (`"Y"` atau `"N"`, default: `"Y"`) |
 
@@ -1008,7 +1012,9 @@ Accept: application/json
   "applicationcompany": "PT Karaoke Digital Nusantara",
   "applicationname": "Karaoke Family Station",
   "applicationads1": "https://storage.example.com/ads/banner1.jpg",
+  "applicationads1active": "Y",
   "applicationads2": "https://storage.example.com/ads/banner2.jpg",
+  "applicationads2active": "Y",
   "applicationadsactive": "Y",
   "applicationadsbottom": "https://storage.example.com/ads/banner_bottom.jpg",
   "applicationadsbottomactive": "Y"
@@ -1024,7 +1030,9 @@ Accept: application/json
     "applicationcompany": "PT Karaoke Digital Nusantara",
     "applicationname": "Karaoke Family Station",
     "applicationads1": "https://storage.example.com/ads/banner1.jpg",
+    "applicationads1active": "Y",
     "applicationads2": "https://storage.example.com/ads/banner2.jpg",
+    "applicationads2active": "Y",
     "applicationadsactive": "Y",
     "applicationadsbottom": "https://storage.example.com/ads/banner_bottom.jpg",
     "applicationadsbottomactive": "Y",
@@ -1051,7 +1059,9 @@ Mengambil data record pengaturan aplikasi spesifik berdasarkan `applicationid`.
     "applicationcompany": "PT Karaoke Digital Nusantara",
     "applicationname": "Karaoke Family Station",
     "applicationads1": "https://storage.example.com/ads/banner1.jpg",
+    "applicationads1active": "Y",
     "applicationads2": "https://storage.example.com/ads/banner2.jpg",
+    "applicationads2active": "Y",
     "applicationadsactive": "Y",
     "applicationadsbottom": "https://storage.example.com/ads/banner_bottom.jpg",
     "applicationadsbottomactive": "Y",
@@ -1087,7 +1097,9 @@ Mengupdate record pengaturan aplikasi tertentu.
     "applicationcompany": "PT Karaoke Digital Nusantara",
     "applicationname": "Karaoke Super App",
     "applicationads1": "https://storage.example.com/ads/banner1.jpg",
+    "applicationads1active": "Y",
     "applicationads2": "https://storage.example.com/ads/banner2.jpg",
+    "applicationads2active": "Y",
     "applicationadsactive": "N",
     "applicationadsbottom": "https://storage.example.com/ads/banner_bottom.jpg",
     "applicationadsbottomactive": "Y",

@@ -38,6 +38,10 @@ test('admin can view ads page even if no settings record exists yet', function (
     $response->assertSee('type="file"', false);
     $response->assertSee('enctype="multipart/form-data"', false);
     $response->assertSee('Ad Unit ID AdMob');
+    $response->assertSee('name="applicationads1active"', false);
+    $response->assertSee('name="applicationads2active"', false);
+    $response->assertSee('name="applicationadsbottomactive"', false);
+    $response->assertDontSee('name="applicationadsactive"', false);
 });
 
 test('admin can view ads page with existing banner preview', function () {
@@ -45,7 +49,8 @@ test('admin can view ads page with existing banner preview', function () {
     Setting::factory()->create([
         'applicationads1' => 'https://example.com/banner-top.jpg',
         'applicationads2' => 'banners/popup.jpg',
-        'applicationadsactive' => 'Y',
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'Y',
         'applicationadsbottom' => 'banners/bottom.jpg',
         'applicationadsbottomactive' => 'N',
     ]);
@@ -71,7 +76,8 @@ test('admin can save ads and upload banner files when record does not exist init
     $response = $this->actingAs($admin)->put('/admin/ads', [
         'applicationads1' => $ad1,
         'applicationads2' => $ad2,
-        'applicationadsactive' => 'Y',
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'Y',
         'applicationadsbottom' => $adBottom,
         'applicationadsbottomactive' => 'Y',
     ]);
@@ -92,6 +98,57 @@ test('admin can save ads and upload banner files when record does not exist init
     Storage::disk('public')->assertExists($setting->applicationadsbottom);
 });
 
+test('admin can save different active status for each ad slot', function () {
+    Storage::fake('public');
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->put('/admin/ads', [
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'N',
+        'applicationadsbottomactive' => 'N',
+    ]);
+
+    $response->assertRedirect('/admin/ads');
+    $response->assertSessionHasNoErrors();
+
+    $setting = Setting::first();
+    expect($setting->applicationads1active)->toBe('Y')
+        ->and($setting->applicationads2active)->toBe('N')
+        ->and($setting->applicationadsbottomactive)->toBe('N')
+        ->and($setting->applicationadsactive)->toBe('Y');
+});
+
+test('legacy main ad status is inactive when both main slots are inactive', function () {
+    Storage::fake('public');
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->put('/admin/ads', [
+        'applicationads1active' => 'N',
+        'applicationads2active' => 'N',
+        'applicationadsbottomactive' => 'Y',
+    ]);
+
+    $response->assertRedirect('/admin/ads');
+    $response->assertSessionHasNoErrors();
+
+    $setting = Setting::first();
+    expect($setting->applicationadsactive)->toBe('N')
+        ->and($setting->applicationadsbottomactive)->toBe('Y');
+});
+
+test('admin save rejects invalid per-slot active status', function () {
+    Storage::fake('public');
+    $admin = User::factory()->admin()->create();
+
+    $response = $this->actingAs($admin)->put('/admin/ads', [
+        'applicationads1active' => 'INVALID',
+        'applicationads2active' => 'Y',
+        'applicationadsbottomactive' => 'Y',
+    ]);
+
+    $response->assertSessionHasErrors(['applicationads1active']);
+});
+
 test('admin can upload new banner file and delete old file', function () {
     Storage::fake('public');
     $admin = User::factory()->admin()->create();
@@ -109,7 +166,8 @@ test('admin can upload new banner file and delete old file', function () {
 
     $response = $this->actingAs($admin)->put('/admin/ads', [
         'applicationads1' => $newFile,
-        'applicationadsactive' => 'Y',
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'Y',
         'applicationadsbottomactive' => 'Y',
     ]);
 
@@ -132,7 +190,8 @@ test('admin can retain existing banner if no new file is uploaded', function () 
     ]);
 
     $response = $this->actingAs($admin)->put('/admin/ads', [
-        'applicationadsactive' => 'Y',
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'Y',
         'applicationadsbottomactive' => 'Y',
     ]);
 
@@ -158,7 +217,8 @@ test('admin can remove banner by selecting delete checkbox', function () {
     Storage::disk('public')->assertExists($bannerPath);
 
     $response = $this->actingAs($admin)->put('/admin/ads', [
-        'applicationadsactive' => 'Y',
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'Y',
         'applicationadsbottomactive' => 'Y',
         'delete_applicationads1' => '1',
     ]);
@@ -180,7 +240,8 @@ test('validation fails when uploaded file is not an image or exceeds 2MB', funct
     $response = $this->actingAs($admin)->put('/admin/ads', [
         'applicationads1' => $nonImage,
         'applicationads2' => $oversizedImage,
-        'applicationadsactive' => 'Y',
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'Y',
         'applicationadsbottomactive' => 'Y',
     ]);
 
@@ -199,7 +260,8 @@ test('admin can save admob ad type with ad unit id without uploading image', fun
         'applicationads1unit' => 'ca-app-pub-1234567890123456/1111111111',
         'applicationads2type' => 'admob_banner',
         'applicationads2unit' => 'ca-app-pub-1234567890123456/3333333333',
-        'applicationadsactive' => 'Y',
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'Y',
         'applicationadsbottomtype' => 'admob_interstitial',
         'applicationadsbottomunit' => 'ca-app-pub-1234567890123456/2222222222',
         'applicationadsbottomactive' => 'Y',
@@ -224,7 +286,8 @@ test('admin save requires ad unit id when ad type is admob', function () {
     $response = $this->actingAs($admin)->put('/admin/ads', [
         'applicationads1type' => 'admob_banner',
         'applicationads1unit' => '',
-        'applicationadsactive' => 'Y',
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'Y',
         'applicationadsbottomactive' => 'Y',
     ]);
 
@@ -237,7 +300,8 @@ test('admin save rejects unknown ad type', function () {
 
     $response = $this->actingAs($admin)->put('/admin/ads', [
         'applicationads1type' => 'unknown_type',
-        'applicationadsactive' => 'Y',
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'Y',
         'applicationadsbottomactive' => 'Y',
     ]);
 

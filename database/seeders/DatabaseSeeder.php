@@ -50,6 +50,8 @@ class DatabaseSeeder extends Seeder
             ['applicationcompany' => 'Melindastore'],
             [
                 'applicationname' => 'Melindastore Youtube Stream Karaoke',
+                'applicationads1active' => 'N',
+                'applicationads2active' => 'N',
                 'applicationadsactive' => 'N',
                 'applicationadsbottomactive' => 'N',
             ]

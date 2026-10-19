@@ -66,23 +66,6 @@
                         'name' => 'applicationads2',
                         'label' => 'Slot 2 — Konten / Pop-up',
                     ])
-
-                    <!-- Status Banner Utama -->
-                    <div>
-                        <label for="applicationadsactive" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-                            Status Iklan Utama <span class="text-rose-400">*</span>
-                        </label>
-                        <select name="applicationadsactive"
-                                id="applicationadsactive"
-                                required
-                                class="block w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-sm text-white focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 transition-colors">
-                            <option value="Y" {{ old('applicationadsactive', $setting->applicationadsactive) === 'Y' ? 'selected' : '' }}>Aktif (Ditampilkan)</option>
-                            <option value="N" {{ old('applicationadsactive', $setting->applicationadsactive) === 'N' ? 'selected' : '' }}>Nonaktif (Disembunyikan)</option>
-                        </select>
-                        @error('applicationadsactive')
-                            <p class="mt-1 text-xs text-rose-400">{{ $message }}</p>
-                        @enderror
-                    </div>
                 </div>
             </div>
 
@@ -99,22 +82,6 @@
                         'name' => 'applicationadsbottom',
                         'label' => 'Iklan Bawah — Footer',
                     ])
-
-                    <div>
-                        <label for="applicationadsbottomactive" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-                            Status Iklan Bawah <span class="text-rose-400">*</span>
-                        </label>
-                        <select name="applicationadsbottomactive"
-                                id="applicationadsbottomactive"
-                                required
-                                class="block w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-sm text-white focus:border-blue-500 focus:outline-hidden focus:ring-1 focus:ring-blue-500 transition-colors">
-                            <option value="Y" {{ old('applicationadsbottomactive', $setting->applicationadsbottomactive) === 'Y' ? 'selected' : '' }}>Aktif (Ditampilkan)</option>
-                            <option value="N" {{ old('applicationadsbottomactive', $setting->applicationadsbottomactive) === 'N' ? 'selected' : '' }}>Nonaktif (Disembunyikan)</option>
-                        </select>
-                        @error('applicationadsbottomactive')
-                            <p class="mt-1 text-xs text-rose-400">{{ $message }}</p>
-                        @enderror
-                    </div>
                 </div>
             </div>
         </div>

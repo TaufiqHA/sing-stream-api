@@ -82,7 +82,9 @@ test('admin can create initial settings via post', function () {
         'applicationcompany' => 'Media Prima Nusantara',
         'applicationname' => 'Karaoke Pro Station',
         'applicationads1' => 'https://example.com/banner1.jpg',
+        'applicationads1active' => 'Y',
         'applicationads2' => 'https://example.com/banner2.jpg',
+        'applicationads2active' => 'N',
         'applicationadsactive' => 'Y',
         'applicationadsbottom' => 'https://example.com/bottom.jpg',
         'applicationadsbottomactive' => 'Y',
@@ -96,7 +98,9 @@ test('admin can create initial settings via post', function () {
                 'applicationcompany',
                 'applicationname',
                 'applicationads1',
+                'applicationads1active',
                 'applicationads2',
+                'applicationads2active',
                 'applicationadsactive',
                 'applicationadsbottom',
                 'applicationadsbottomactive',
@@ -109,6 +113,8 @@ test('admin can create initial settings via post', function () {
             'data' => [
                 'applicationcompany' => 'Media Prima Nusantara',
                 'applicationname' => 'Karaoke Pro Station',
+                'applicationads1active' => 'Y',
+                'applicationads2active' => 'N',
                 'applicationadsactive' => 'Y',
                 'applicationadsbottomactive' => 'Y',
             ],
@@ -117,8 +123,51 @@ test('admin can create initial settings via post', function () {
     $this->assertDatabaseHas('tb_application', [
         'applicationcompany' => 'Media Prima Nusantara',
         'applicationname' => 'Karaoke Pro Station',
+        'applicationads1active' => 'Y',
+        'applicationads2active' => 'N',
         'applicationadsactive' => 'Y',
     ]);
+});
+
+test('admin settings api maps legacy active status to both main slots', function () {
+    $admin = User::factory()->admin()->create();
+    Sanctum::actingAs($admin);
+
+    $response = $this->postJson('/api/admin/settings', [
+        'applicationcompany' => 'PT ABC',
+        'applicationname' => 'Karaoke App',
+        'applicationadsactive' => 'N',
+    ]);
+
+    $response->assertStatus(201)
+        ->assertJson([
+            'data' => [
+                'applicationads1active' => 'N',
+                'applicationads2active' => 'N',
+                'applicationadsactive' => 'N',
+            ],
+        ]);
+});
+
+test('admin settings api syncs legacy status from per-slot statuses', function () {
+    $admin = User::factory()->admin()->create();
+    Sanctum::actingAs($admin);
+
+    Setting::factory()->create();
+
+    $response = $this->putJson('/api/admin/settings', [
+        'applicationads1active' => 'N',
+        'applicationads2active' => 'N',
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJson([
+            'data' => [
+                'applicationads1active' => 'N',
+                'applicationads2active' => 'N',
+                'applicationadsactive' => 'N',
+            ],
+        ]);
 });
 
 test('admin can update existing settings via put', function () {
@@ -164,12 +213,19 @@ test('settings creation validates required fields and enum values', function () 
     $responseInvalidEnum = $this->postJson('/api/admin/settings', [
         'applicationcompany' => 'PT ABC',
         'applicationname' => 'Karaoke App',
+        'applicationads1active' => 'INVALID',
+        'applicationads2active' => 'INVALID',
         'applicationadsactive' => 'INVALID',
         'applicationadsbottomactive' => 'INVALID',
     ]);
 
     $responseInvalidEnum->assertStatus(422)
-        ->assertJsonValidationErrors(['applicationadsactive', 'applicationadsbottomactive']);
+        ->assertJsonValidationErrors([
+            'applicationads1active',
+            'applicationads2active',
+            'applicationadsactive',
+            'applicationadsbottomactive',
+        ]);
 });
 
 test('admin can view specific setting by id', function () {
